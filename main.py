@@ -15,9 +15,9 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://ai-kondate-app.vercel.app",     # ← 旧URL
-        "https://ai-kondate-app2.vercel.app",    # ← ⭐️ これを追加する！
-        "http://localhost:3000",
+        "https://ai-kondate-app2.vercel.app",  # ←★絶対必要！
+        "https://ai-kondate-app.vercel.app",   # （旧URLなら残してOK）
+        "http://localhost:3000",               
         "http://127.0.0.1:3000"
     ],
     allow_credentials=True,
