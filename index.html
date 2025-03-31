@@ -1,36 +1,64 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI献立アシスタント</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: "Segoe UI", sans-serif;
       margin: 1em;
       padding: 0;
       line-height: 1.6;
+      background-color: #fffaf2;
     }
 
     h1 {
       font-size: 1.8em;
+      color: #d16b86;
     }
 
     input, button {
-      padding: 0.5em;
+      padding: 0.7em;
       font-size: 1em;
       margin-top: 0.5em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #ffb6c1;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ff8fab;
+    }
+
+    #loading {
+      margin-top: 1em;
+      font-style: italic;
+      color: #888;
+      display: none;
+      animation: blink 1s infinite;
+      font-size: 1.1em;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
     }
 
     #result {
       margin-top: 1em;
       white-space: pre-wrap;
-    }
-
-    #loading {
-      margin-top: 1em;
-      color: #555;
-      font-style: italic;
+      font-size: 1em;
+      background-color: #fff0f5;
+      padding: 1em;
+      border-radius: 10px;
     }
 
     @media (max-width: 600px) {
@@ -42,60 +70,47 @@
   </style>
 </head>
 <body>
-  <h1>🍳AI献立アシスタント</h1>
+  <h1>🍳 AI献立アシスタント</h1>
   <p>冷蔵庫の中の食材を入力してください：</p>
   <input type="text" id="ingredients" placeholder="例：卵、にんじん、牛乳" />
   <button onclick="getRecipe()">レシピを探す</button>
 
-  <div id="loading" style="display: none;">⏳ レシピを考え中...</div>
+  <div id="loading">⏳ レシピを考え中…</div>
 
   <h2>おすすめレシピ</h2>
   <div id="result"></div>
 
   <script>
-   async function getRecipe() {
-  const ingredients = document.getElementById("ingredients").value;
-  console.log("入力された食材:", ingredients);
+    async function getRecipe() {
+      const ingredients = document.getElementById("ingredients").value;
+      console.log("食材:", ingredients);
 
-  // ローディング表示
-  document.getElementById("loading").style.display = "block";
-  console.log("ローディング表示 ON");
+      // ローディング表示ON
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("result").innerText = "";
 
-  document.getElementById("result").innerText = "";
+      try {
+        const response = await fetch("https://ai-kondate-app2.onrender.com/recipe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ ingredients })
+        });
 
-  try {
-    // ⏳ わざと2秒待つ（テスト用）
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    const response = await fetch("https://ai-kondate-app2.onrender.com/recipe", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ ingredients: ingredients })
-    });
-
-    console.log("API からのレスポンスを待機中...");
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log("成功:", data);
-      document.getElementById("result").innerText = data.recipe;
-    } else {
-      console.log("失敗: ステータスコード", response.status);
-      document.getElementById("result").innerText = "レシピの取得に失敗しました。";
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById("result").innerText = data.recipe;
+        } else {
+          document.getElementById("result").innerText = "レシピの取得に失敗しました。";
+        }
+      } catch (error) {
+        document.getElementById("result").innerText = "エラーが発生しました。";
+      } finally {
+        // ローディング非表示
+        document.getElementById("loading").style.display = "none";
+      }
     }
-  } catch (error) {
-    console.error("エラー:", error);
-    document.getElementById("result").innerText = "エラーが発生しました。";
-  } finally {
-    // ローディング非表示
-    document.getElementById("loading").style.display = "none";
-    console.log("ローディング表示 OFF");
-  }
-}
-
   </script>
-  
 </body>
 </html>
