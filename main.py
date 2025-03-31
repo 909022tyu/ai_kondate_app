@@ -33,3 +33,12 @@ class IngredientInput(BaseModel):
 def read_root():
     return {"message": "AI献立アシスタントが起動中です🍳"}
 
+@app.post("/recipe")
+async def get_recipe(input: IngredientInput):
+    prompt = f"{input.ingredients} を使った簡単な料理を1つ教えて。調理時間と足りない材料も教えて。"
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7
+    )
+    return {"recipe": response.choices[0].message.content}
