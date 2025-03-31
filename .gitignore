@@ -1,9 +1,11 @@
-# 仮想環境や不要なファイルを無視
-__pycache__/
+# 仮想環境フォルダ
 venv/
-*.pyc
 
-# 必要なファイルは除外（追跡対象にする）
-!index.html
-!requirements.txt
-!ai_kondate_app/
+# Python のキャッシュ
+__pycache__/
+*.py[cod]
+
+# .env ファイル（APIキーなど）
+.env
+
+# その他無視したいファイルがあればここに追記
