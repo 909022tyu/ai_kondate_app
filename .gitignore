@@ -1,0 +1,9 @@
+# 仮想環境や不要なファイルを無視
+__pycache__/
+venv/
+*.pyc
+
+# 必要なファイルは除外（追跡対象にする）
+!index.html
+!requirements.txt
+!ai_kondate_app/

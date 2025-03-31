@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI献立アシスタント</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 1em;
+        padding: 0;
+        line-height: 1.6;
+      }
+
+      h1 {
+        font-size: 1.8em;
+      }
+
+      input, button {
+        padding: 0.5em;
+        font-size: 1em;
+        margin-top: 0.5em;
+      }
+
+      #result {
+        margin-top: 1em;
+        white-space: pre-wrap;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          font-size: 1em;
+        }
+
+        input, button {
+          width: 100%;
+          box-sizing: border-box;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>AI献立アシスタント</h1>
+    <p>冷蔵庫の中の食材を入力してください：</p>
+    <input type="text" id="ingredients" placeholder="例：卵、にんじん、牛乳">
+    <button onclick="getRecipe()">レシピを探す</button>
+
+    <h2>おすすめレシピ</h2>
+    <div id="result"></div>
+
+    <script>
+      async function getRecipe() {
+        const ingredients = document.getElementById("ingredients").value;
+        const response = await fetch("http://192.168.68.54:8000/recipe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ ingredients: ingredients })
+        });
+
+        if (!response.ok) {
+          document.getElementById("result").innerText = "エラーが発生しました💦";
+          return;
+        }
+
+        const data = await response.json();
+        document.getElementById("result").innerText = data.recipe;
+      }
+    </script>
+  </body>
+</html>
+
