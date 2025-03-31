@@ -53,44 +53,48 @@
   <div id="result"></div>
 
   <script>
-    async function getRecipe() {
-      const ingredients = document.getElementById("ingredients").value;
-      console.log("入力された食材:", ingredients);
-  
-      // ローディング表示
-      document.getElementById("loading").style.display = "block";
-      console.log("ローディング表示 ON");
-  
-      document.getElementById("result").innerText = "";
-  
-      try {
-        const response = await fetch("https://ai-kondate-app2.onrender.com/recipe", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ ingredients: ingredients })
-        });
-  
-        console.log("API からのレスポンスを待機中...");
-  
-        if (response.ok) {
-          const data = await response.json();
-          console.log("成功:", data);
-          document.getElementById("result").innerText = data.recipe;
-        } else {
-          console.log("失敗: ステータスコード", response.status);
-          document.getElementById("result").innerText = "レシピの取得に失敗しました。";
-        }
-      } catch (error) {
-        console.error("エラー:", error);
-        document.getElementById("result").innerText = "エラーが発生しました。";
-      } finally {
-        // ローディング非表示
-        document.getElementById("loading").style.display = "none";
-        console.log("ローディング表示 OFF");
-      }
+   async function getRecipe() {
+  const ingredients = document.getElementById("ingredients").value;
+  console.log("入力された食材:", ingredients);
+
+  // ローディング表示
+  document.getElementById("loading").style.display = "block";
+  console.log("ローディング表示 ON");
+
+  document.getElementById("result").innerText = "";
+
+  try {
+    // ⏳ わざと2秒待つ（テスト用）
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    const response = await fetch("https://ai-kondate-app2.onrender.com/recipe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ ingredients: ingredients })
+    });
+
+    console.log("API からのレスポンスを待機中...");
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("成功:", data);
+      document.getElementById("result").innerText = data.recipe;
+    } else {
+      console.log("失敗: ステータスコード", response.status);
+      document.getElementById("result").innerText = "レシピの取得に失敗しました。";
     }
+  } catch (error) {
+    console.error("エラー:", error);
+    document.getElementById("result").innerText = "エラーが発生しました。";
+  } finally {
+    // ローディング非表示
+    document.getElementById("loading").style.display = "none";
+    console.log("ローディング表示 OFF");
+  }
+}
+
   </script>
   
 </body>
