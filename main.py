@@ -11,20 +11,20 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 app = FastAPI()
-
-# CORS 設定（フロントエンドからのリクエスト許可）
+# CORS 設定（フロントエンドのドメインからのアクセスを許可）
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-    "http://localhost:3000", 
-    "http://127.0.0.1:3000", 
-    "https://ai-kondate-app2.vercel.app"
-],
-
+        "https://ai-kondate-app.vercel.app",  # ←★ ここがとても重要！！
+        "http://localhost:3000",              # ローカル環境
+        "http://127.0.0.1:3000"               # ローカル環境
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 
 class IngredientInput(BaseModel):
     ingredients: str
