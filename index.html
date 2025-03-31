@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,7 +52,7 @@
     <script>
       async function getRecipe() {
         const ingredients = document.getElementById("ingredients").value;
-        const response = await fetch("http://192.168.68.54:8000/recipe", {
+        const response = await fetch("http://192.168.68.54:8000/recipe", {  // ←ここは自分のIPに！
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -60,15 +60,13 @@
           body: JSON.stringify({ ingredients: ingredients })
         });
 
-        if (!response.ok) {
-          document.getElementById("result").innerText = "エラーが発生しました💦";
-          return;
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById("result").innerText = data.recipe;
+        } else {
+          document.getElementById("result").innerText = "レシピの取得に失敗しました。";
         }
-
-        const data = await response.json();
-        document.getElementById("result").innerText = data.recipe;
       }
     </script>
   </body>
 </html>
-
