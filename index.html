@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI献立アシスタント</title>
   <style>
     body {
@@ -28,17 +28,12 @@
     }
 
     #loading {
-      display: none;
       margin-top: 1em;
       color: #555;
       font-style: italic;
     }
 
     @media (max-width: 600px) {
-      body {
-        font-size: 1em;
-      }
-
       input, button {
         width: 100%;
         box-sizing: border-box;
@@ -47,12 +42,12 @@
   </style>
 </head>
 <body>
-  <h1>AI献立アシスタント</h1>
+  <h1>🍳AI献立アシスタント</h1>
   <p>冷蔵庫の中の食材を入力してください：</p>
   <input type="text" id="ingredients" placeholder="例：卵、にんじん、牛乳" />
   <button onclick="getRecipe()">レシピを探す</button>
 
-  <div id="loading">🔄 レシピを考え中...</div>
+  <div id="loading" style="display: none;">⏳ レシピを考え中...</div>
 
   <h2>おすすめレシピ</h2>
   <div id="result"></div>
@@ -60,11 +55,10 @@
   <script>
     async function getRecipe() {
       const ingredients = document.getElementById("ingredients").value;
-      const loadingEl = document.getElementById("loading");
-      const resultEl = document.getElementById("result");
 
-      loadingEl.style.display = "block";
-      resultEl.innerText = "";
+      // ローディング表示
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("result").innerText = "";
 
       try {
         const response = await fetch("https://ai-kondate-app2.onrender.com/recipe", {
@@ -72,19 +66,20 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ ingredients })
+          body: JSON.stringify({ ingredients: ingredients })
         });
 
         if (response.ok) {
           const data = await response.json();
-          resultEl.innerText = data.recipe;
+          document.getElementById("result").innerText = data.recipe;
         } else {
-          resultEl.innerText = "レシピの取得に失敗しました。";
+          document.getElementById("result").innerText = "レシピの取得に失敗しました。";
         }
       } catch (error) {
-        resultEl.innerText = "エラーが発生しました。もう一度お試しください。";
+        document.getElementById("result").innerText = "エラーが発生しました。";
       } finally {
-        loadingEl.style.display = "none";
+        // ローディング非表示
+        document.getElementById("loading").style.display = "none";
       }
     }
   </script>
